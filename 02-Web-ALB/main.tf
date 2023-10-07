@@ -1,10 +1,11 @@
 # Public/Web ALB creation
 resource "aws_lb" "Web_alb" {
   name               = "${var.project_name}-Web-ALB"
-  internal           = true
+  internal           = false
   load_balancer_type = "application"
   security_groups    = [data.aws_ssm_parameter.web_alb_sg_id.value]
-  subnets            = slice(data.aws_subnets.all.ids,0,2)
+  # subnets            = slice(data.aws_subnets.all.ids,0,2)
+  subnets =data.aws_subnet.public_subnet[*].id
   tags = merge(
     var.common_tags,
     {
@@ -36,7 +37,7 @@ module "records" {
   zone_name = "suhaildevops.online"
   records = [
     {
-      name    = "serverfleet"
+      name    = ""
       type    = "A"
       alias   = {
         name    = aws_lb.Web_alb.dns_name

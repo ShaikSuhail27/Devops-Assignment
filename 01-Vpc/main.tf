@@ -20,7 +20,7 @@ resource "aws_eip" "elastic_ip" {
 
 resource "aws_nat_gateway" "ngw" {
   allocation_id = aws_eip.elastic_ip.id
-  subnet_id     = data.aws_subnet.public_subnet.id
+  subnet_id     = data.aws_subnet.public_subnet[0].id
 
   tags = merge (
     var.common_tags,

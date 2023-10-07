@@ -1,7 +1,7 @@
 # target group creation
 resource "aws_lb_target_group" "Server-Fleet" {
   name     = "${var.project_name}-Server-fleet-tg"
-  port     = 8080
+  port     = 80
   protocol = "HTTP"
   vpc_id   = data.aws_ssm_parameter.default_vpc_id.value
   health_check {
@@ -9,8 +9,8 @@ resource "aws_lb_target_group" "Server-Fleet" {
     healthy_threshold = 2 # it will check the health whether it is good or not
     interval = 15
     matcher = "200-299"
-    path = "/health"
-    port = 8080
+    path = "/"
+    port = 80
     protocol = "HTTP"
     timeout = 5
     unhealthy_threshold = 3
@@ -94,7 +94,7 @@ resource "aws_lb_listener_rule" "static" {
 
   condition {
     host_header {
-      values = ["serverfleet.suhaildevops.online"]
+      values = ["suhaildevops.online"]
     }
   }
 }

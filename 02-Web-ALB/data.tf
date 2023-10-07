@@ -36,10 +36,24 @@ data "aws_vpc" "default" {
   # }
 
 
-  data "aws_subnets" "all" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
+#   data "aws_subnets" "all" {
+#   filter {
+#     name   = "vpc-id"
+#     values = [data.aws_vpc.default.id]
+#   }
+# }
+
+data "aws_availability_zones" "available" {
+  exclude_names = ["ap-southeast-1c"]
 }
 
+data "aws_subnet" "public_subnet" {
+  count = length(data.aws_availability_zones.available.names)
+  vpc_id                  = data.aws_vpc.default.id
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  default_for_az           = true
+}
+
+output "ps"{
+  value=data.aws_subnet.public_subnet
+}
