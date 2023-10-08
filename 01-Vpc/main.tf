@@ -92,14 +92,22 @@ resource "aws_security_group_rule" "server_fleet_web_alb" {
   security_group_id = aws_security_group.server_fleet.id
 }
 
-resource "aws_security_group_rule" "web_alb_server_fleet" {
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
+resource "aws_security_group_rule" "server_fleet_web_alb_egress" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 65535
   protocol          = "tcp"
-  source_security_group_id = aws_security_group.server_fleet.id
-  security_group_id = aws_security_group.web-alb-sg.id
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.server_fleet.id
 }
+# resource "aws_security_group_rule" "web_alb_server_fleet" {
+#   type              = "ingress"
+#   from_port         = 80
+#   to_port           = 80
+#   protocol          = "tcp"
+#   source_security_group_id = aws_security_group.server_fleet.id
+#   security_group_id = aws_security_group.web-alb-sg.id
+# }
 
 resource "aws_security_group_rule" "web_alb_internet" {
   type              = "ingress"
@@ -110,4 +118,14 @@ resource "aws_security_group_rule" "web_alb_internet" {
   security_group_id = aws_security_group.web-alb-sg.id
 }
 
+
+resource "aws_security_group_rule" "web_alb_egress" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "tcp"
+  //cidr_blocks       = ["0.0.0.0/0"]
+  source_security_group_id = aws_security_group.server_fleet.id
+  security_group_id = aws_security_group.web-alb-sg.id
+}
 

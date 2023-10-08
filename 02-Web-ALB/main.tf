@@ -3,6 +3,7 @@ resource "aws_lb" "Web_alb" {
   name               = "${var.project_name}-Web-ALB"
   internal           = false
   load_balancer_type = "application"
+  enable_http2 = true
   security_groups    = [data.aws_ssm_parameter.web_alb_sg_id.value]
   # subnets            = slice(data.aws_subnets.all.ids,0,2)
   subnets =data.aws_subnet.public_subnet[*].id
